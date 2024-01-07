@@ -1,0 +1,116 @@
+https://www.jqueryscript.net/form/autocomplete-ajax-combobox.html
+
+<link rel="stylesheet" href="jquery.ajax-combobox.css" />
+
+ 
+  <textarea id="accounts-zone" style="width:500px;height:150px"></textarea><br/>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="jquery.ajax-combobox.min.js"></script>
+<script>
+  var selectAccountsArray = []
+  function selectAccounts(title,elm){
+	jQuery('.ac_over').each(function() {
+    var currentElement = $(this);
+	if(currentElement.attr('title') == title){
+		// html = currentElement.html().replace(title+'\n','')
+		if (elm.is(':checked')) {
+			// currentElement.html(html+'\n'+elm.val());
+			/*if (title  in selectAccountsArray){
+				//selectAccountsArray[title] = selectAccountsArray[title]+elm.val()
+				selectAccountsArray[title].splice(0, 0, elm.val());
+			}else{
+				selectAccountsArray[title] = [elm.val()]
+			}*/
+			if (~$('#accounts-zone').val().indexOf(elm.val())){
+				
+			}else{
+				selectAccountsArray.push(elm.val())
+			}
+			
+			
+		}else{
+			selectAccountsArray.splice($.inArray(elm.val(), selectAccountsArray), 1);
+			/*if (title  in selectAccountsArray){
+				selectAccountsArray[title].splice($.inArray(elm.val(), selectAccountsArray[title]), 1);
+			}*/
+			
+		}
+		// currentElement.html('koko')
+	}
+	currentElement.html( title + ' ('+selectAccountsArray.length+')' )
+	console.log(selectAccountsArray)
+	});
+  }
+  function AddAccountsToDiv(div){
+  
+	selectAccountsArray=[]
+	jQuery('.ac_over').each(function() {
+	var currentElement = $(this);
+	currentElement.html( div )
+	});
+ 
+  $("#"+div).html('loading....');
+  $.ajax({url: "https://reqres.in/api/users?page=2", success: function(result){
+	// console.log(result['data'][0]['avatar'])
+    //$("#"+div).html(result['data'][0]['avatar']);
+	$("#"+div).html('<table><tr><td><table style="width:100%"><tr><td><input onclick="selectAccounts(\''+div+'\',$(this))" value="account1@gmail.com" type="checkbox" />account1@gmail.com</td></tr><tr><td><input  onclick="selectAccounts(\''+div+'\',$(this))" value="account2@gmail.com" type="checkbox" />account2@gmail.com</td></tr><tr><td><input onclick="selectAccounts(\''+div+'\',$(this))" value="account3@gmail.com"  type="checkbox" />account3@gmail.com</td></tr></table></td><td><table style="width:100%"><tr><td><input type="checkbox" />domain1@gmail.com</td></tr><tr><td><input type="checkbox" />domain2@gmail.com</td></tr><tr><td><input type="checkbox" />domain3@gmail.com</td></tr></table></td></tr></table>');
+  }});
+  
+  }
+  /*
+  var data = []
+  $.ajax({url: "https://reqres.in/api/users?page=2", success: function(result){
+    data = result
+	}});
+  
+  
+  var data = [
+  {name:'Adams',        Accounts:'  <table style="width:100%"><tr><td><button onclick="AddAccountsToDiv(\'Adams\')">Get</button></td><td><input type="checkbox" />All</td></tr></table><hr/> <div id="Adams"></div>  '},
+];
+
+$(function() {
+  $('#combobox').ajaxComboBox(
+    data,
+    {
+      sub_info: true,
+      sub_as: {
+        // id: 'Employer ID',
+        //post: 'Post',
+        Accounts: 'Accounts'
+      },
+      select_only: true,
+      init_record: 'A009',
+      primary_key: 'id',
+    }
+  );
+});*/
+var data = [
+  {name:'Adams',        Accounts:'  <table style="width:100%"><tr><td><button onclick="AddAccountsToDiv(\'Adams\')">Get</button></td><td><input type="checkbox" />All</td></tr></table><hr/> <div id="Adams"></div>  '},
+];
+$(function() {
+  $('#accounts-zone').ajaxComboBox(
+    data,
+    {
+	// source: 'https://reqres.in/api/users?page=2',
+	  sub_info: true,
+	  
+	  
+	  init_record: false,
+	  per_page: 10,
+	  navi_num: 5,
+	  
+	  
+	  
+	  
+	  
+      plugin_type: 'textarea',
+      tags: [
+        {
+          pattern: ['+', '\n']
+        }
+      ]
+    }
+  );
+});
+</script>
